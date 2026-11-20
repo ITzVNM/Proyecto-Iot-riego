@@ -1,0 +1,3008 @@
+[
+  {
+    "id": "686e0eaad21e114a",
+    "type": "tab",
+    "label": "Agrivoltaico",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "tab_riego",
+    "type": "tab",
+    "label": "Riego",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "tab_dash",
+    "type": "tab",
+    "label": "Dashboard",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "tab_ia",
+    "type": "tab",
+    "label": "IA",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "broker1",
+    "type": "mqtt-broker",
+    "name": "EMQX local",
+    "broker": "ws://127.0.0.1:8083/mqtt",
+    "port": "8083",
+    "clientid": "nodered-agri",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "5",
+    "keepalive": "6000",
+    "cleansession": true,
+    "autoUnsubscribe": false,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthPayload": "",
+    "birthMsg": {},
+    "closeTopic": "",
+    "closePayload": "",
+    "closeMsg": {},
+    "willTopic": "",
+    "willQos": "0",
+    "willPayload": "",
+    "willMsg": {},
+    "userProps": "",
+    "sessionExpiry": ""
+  },
+  {
+    "id": "ui_base",
+    "type": "ui-base",
+    "name": "Agrivoltaico",
+    "path": "/dashboard",
+    "includeClientData": true,
+    "acceptsClientConfig": [
+      "ui-notification",
+      "ui-control"
+    ],
+    "showPathInSidebar": false,
+    "navigationStyle": "default",
+    "titleBarStyle": "default"
+  },
+  {
+    "id": "ui_theme",
+    "type": "ui-theme",
+    "name": "Tema agrivoltaico",
+    "colors": {
+      "surface": "#ffffff",
+      "primary": "#2e7d32",
+      "bgPage": "#eef2ee",
+      "groupBg": "#ffffff",
+      "groupOutline": "#cfd8cf"
+    },
+    "sizes": {
+      "pagePadding": "12px",
+      "groupGap": "12px",
+      "groupBorderRadius": "6px",
+      "widgetGap": "12px"
+    }
+  },
+  {
+    "id": "ui_page",
+    "type": "ui-page",
+    "name": "Sistema agrivoltaico",
+    "ui": "ui_base",
+    "path": "/resumen",
+    "icon": "solar-power",
+    "layout": "grid",
+    "theme": "ui_theme",
+    "breakpoints": [
+      {
+        "name": "Default",
+        "px": "0",
+        "cols": "3"
+      },
+      {
+        "name": "Tablet",
+        "px": "576",
+        "cols": "6"
+      },
+      {
+        "name": "Small Desktop",
+        "px": "768",
+        "cols": "9"
+      },
+      {
+        "name": "Desktop",
+        "px": "1024",
+        "cols": "12"
+      }
+    ],
+    "order": 1,
+    "className": "",
+    "visible": "true",
+    "disabled": "false"
+  },
+  {
+    "id": "g_panel",
+    "type": "ui-group",
+    "name": "Panel solar (nodo 2)",
+    "page": "ui_page",
+    "width": "6",
+    "height": "1",
+    "order": 1,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "g_term",
+    "type": "ui-group",
+    "name": "Temperaturas y ambiente (nodo 1)",
+    "page": "ui_page",
+    "width": "6",
+    "height": "1",
+    "order": 2,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "g_cultivo",
+    "type": "ui-group",
+    "name": "Cultivo (nodo 3)",
+    "page": "ui_page",
+    "width": "6",
+    "height": "1",
+    "order": 3,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "g_riego",
+    "type": "ui-group",
+    "name": "Riego",
+    "page": "ui_page",
+    "width": "6",
+    "height": "1",
+    "order": 4,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "g_enlace",
+    "type": "ui-group",
+    "name": "Enlace LoRa",
+    "page": "ui_page",
+    "width": "12",
+    "height": "1",
+    "order": 5,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "g_live",
+    "type": "ui-group",
+    "name": "Ultima hora",
+    "page": "ui_page",
+    "width": "12",
+    "height": "1",
+    "order": 6,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "g_24h",
+    "type": "ui-group",
+    "name": "Ultimas 24 horas (promedios de 5 min)",
+    "page": "ui_page",
+    "width": "12",
+    "height": "1",
+    "order": 7,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "g_ia",
+    "type": "ui-group",
+    "name": "Asesor de IA (Ollama + n8n)",
+    "page": "ui_page",
+    "width": "12",
+    "height": "1",
+    "order": 8,
+    "showTitle": true,
+    "className": "",
+    "visible": "true",
+    "disabled": "false",
+    "groupType": "default"
+  },
+  {
+    "id": "c1b556f548d63456",
+    "type": "comment",
+    "z": "686e0eaad21e114a",
+    "name": "Entrada -> respaldo JSON + CSV crudo (por día) + CSV de promedios de 5 min (por mes) -> dashboard",
+    "info": "",
+    "x": 380,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "f130427c92d6273e",
+    "type": "mqtt in",
+    "z": "686e0eaad21e114a",
+    "name": "Telemetria",
+    "topic": "agri/nodo/+/telemetria",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "broker1",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 120,
+    "y": 160,
+    "wires": [
+      [
+        "2af9a8d774e805f1"
+      ]
+    ]
+  },
+  {
+    "id": "2af9a8d774e805f1",
+    "type": "function",
+    "z": "686e0eaad21e114a",
+    "name": "Marcar hora",
+    "func": "// Valida el mensaje, le pone hora de llegada y guarda la última lectura (memoria global)\nconst p = msg.payload;\nif (typeof p !== \"object\" || p === null || typeof p.nodo !== \"number\") return null;\np.ts = Date.now();\nglobal.set(\"ultimo_\" + p.nodo, p);\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 300,
+    "y": 160,
+    "wires": [
+      [
+        "1c2281cbd14f5e3a",
+        "52ade3221d525997",
+        "7863bcc523bda1ab"
+      ]
+    ]
+  },
+  {
+    "id": "1c2281cbd14f5e3a",
+    "type": "function",
+    "z": "686e0eaad21e114a",
+    "name": "Respaldo JSON",
+    "func": "// Respaldo completo (formato JSON, una línea por lectura): sirve para n8n / Ollama\nconst DIR = \"C:/agrivoltaico/datos/\";\nconst d = new Date(msg.payload.ts);\nconst mes = d.getFullYear() + \"-\" + String(d.getMonth() + 1).padStart(2, \"0\");\nmsg.filename = DIR + \"telemetria_\" + mes + \".jsonl\";\nmsg.payload = JSON.stringify(msg.payload);\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 540,
+    "y": 80,
+    "wires": [
+      [
+        "3cd701db86c806d9"
+      ]
+    ]
+  },
+  {
+    "id": "3cd701db86c806d9",
+    "type": "file",
+    "z": "686e0eaad21e114a",
+    "name": "Respaldo mensual (.jsonl)",
+    "filename": "filename",
+    "filenameType": "msg",
+    "appendNewline": true,
+    "createDir": true,
+    "overwriteFile": "false",
+    "encoding": "none",
+    "x": 790,
+    "y": 80,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "52ade3221d525997",
+    "type": "function",
+    "z": "686e0eaad21e114a",
+    "name": "CSV crudo (diario)",
+    "func": "// CSV para Excel: lecturas crudas, un archivo por nodo y por día\n// Si tu Excel abre todo en UNA sola columna o interpreta mal los decimales, cambia estas dos líneas:\nconst SEP = \";\";   // separador de columnas  (\";\" Excel en español  |  \",\" Excel en inglés)\nconst DEC = \",\";   // separador decimal      (\",\" Excel en español  |  \".\" Excel en inglés)\nconst DIR = \"C:/agrivoltaico/datos/crudo/\";\n\nconst NOMBRES = { 1: \"termico\", 2: \"radiacion\", 3: \"cultivo\" };\n// [clave en el JSON, nombre de la columna, decimales]\nconst COLUMNAS = {\"1\": [[\"pt1\", \"PT100_1_C\", 2], [\"pt2\", \"PT100_2_C\", 2], [\"pt3\", \"PT100_3_C\", 2], [\"temp_amb\", \"T_ambiente_C\", 2], [\"hum_amb\", \"HR_ambiente_pct\", 1], [\"presion\", \"Presion_hPa\", 1], [\"rssi\", \"RSSI_dBm\", 1], [\"snr\", \"SNR_dB\", 1]], \"2\": [[\"irr\", \"Irradiancia_Wm2\", 0], [\"uvi\", \"UVI\", 2], [\"v_panel\", \"V_panel_V\", 3], [\"i_panel\", \"I_panel_mA\", 1], [\"p_panel\", \"P_panel_mW\", 1], [\"rssi\", \"RSSI_dBm\", 1], [\"snr\", \"SNR_dB\", 1]], \"3\": [[\"suelo_temp\", \"Suelo_T_C\", 1], [\"suelo_hum\", \"Suelo_Humedad_pct\", 1], [\"ec\", \"EC_uScm\", 0], [\"sal\", \"Salinidad\", 0], [\"nitrogeno\", \"N_mgkg\", 0], [\"fosforo\", \"P_mgkg\", 0], [\"potasio\", \"K_mgkg\", 0], [\"ph\", \"pH\", 1], [\"dht_temp\", \"DHT22_T_C\", 1], [\"dht_hum\", \"DHT22_HR_pct\", 1], [\"caudal\", \"Caudal_Lmin\", 2], [\"volumen\", \"Volumen_L\", 3], [\"valvula\", \"Valvula\", 0], [\"rssi\", \"RSSI_dBm\", 1], [\"snr\", \"SNR_dB\", 1]]};\n\nconst p = msg.payload;\nif (typeof p !== \"object\" || p === null || !COLUMNAS[p.nodo] || typeof p.ts !== \"number\") return null;\nconst cols = COLUMNAS[p.nodo];\n\nconst d = new Date(p.ts);\nconst pad = (n) => String(n).padStart(2, \"0\");\nconst dia = d.getFullYear() + \"-\" + pad(d.getMonth() + 1) + \"-\" + pad(d.getDate());\nconst fecha = dia + \" \" + pad(d.getHours()) + \":\" + pad(d.getMinutes()) + \":\" + pad(d.getSeconds());\nconst sufijo = dia;\n\nconst fila = [fecha, p.nodo, (typeof p.seq === \"number\") ? p.seq : \"\"];\ncols.forEach(c => {\n    const v = p[c[0]];\n    const dec = c[2];\n    fila.push(typeof v === \"number\" ? v.toFixed(dec).replace(\".\", DEC) : \"\");\n});\n\nconst ruta = DIR + \"nodo\" + p.nodo + \"_\" + NOMBRES[p.nodo] + \"_\" + sufijo + \".csv\";\nlet texto = fila.join(SEP);\nif (!fs.existsSync(ruta)) {\n    // Archivo nuevo: se escribe primero la fila de encabezados\n    const cab = [\"fecha_hora\", \"nodo\", \"seq\"].concat(cols.map(c => c[1]));\n    texto = cab.join(SEP) + \"\\n\" + texto;\n}\nmsg.filename = ruta;\nmsg.payload = texto;\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [
+      {
+        "var": "fs",
+        "module": "fs"
+      }
+    ],
+    "x": 540,
+    "y": 140,
+    "wires": [
+      [
+        "2cbd4e0ea0f2a28a"
+      ]
+    ]
+  },
+  {
+    "id": "2cbd4e0ea0f2a28a",
+    "type": "file",
+    "z": "686e0eaad21e114a",
+    "name": "CSV crudo",
+    "filename": "filename",
+    "filenameType": "msg",
+    "appendNewline": true,
+    "createDir": true,
+    "overwriteFile": "false",
+    "encoding": "none",
+    "x": 790,
+    "y": 140,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "7863bcc523bda1ab",
+    "type": "function",
+    "z": "686e0eaad21e114a",
+    "name": "Promedio 5 min",
+    "func": "// Submuestreo: promedio cada 5 min por nodo (promedia TODOS los campos numéricos que lleguen)\nconst BUCKET_MS = 5 * 60 * 1000;\nconst MAX_HIST  = 2016;                      // 7 días a 5 min\nconst EXCLUIR   = [\"nodo\", \"seq\", \"ts\"];\n\nconst p = msg.payload;\nconst n = p.nodo;\nconst bucket = Math.floor(p.ts / BUCKET_MS);\nlet acc = flow.get(\"acc_\" + n);\nlet salida = null;\n\n// Si llegó una lectura de un intervalo nuevo, se cierra el anterior\nif (acc && acc.bucket !== bucket) {\n    const r = { nodo: n, ts: acc.bucket * BUCKET_MS, muestras: acc.n };\n    Object.keys(acc.sum).forEach(k => {\n        r[k] = Math.round((acc.sum[k] / acc.cnt[k]) * 100) / 100;\n    });\n\n    let h = flow.get(\"hist_\" + n, \"file\") || [];\n    h.push(r);\n    if (h.length > MAX_HIST) h = h.slice(-MAX_HIST);\n    flow.set(\"hist_\" + n, h, \"file\");\n\n    salida = { payload: r };\n    acc = null;\n}\n\nif (!acc) acc = { bucket: bucket, n: 0, sum: {}, cnt: {} };\nacc.n++;\nObject.keys(p).forEach(k => {\n    if (EXCLUIR.includes(k) || typeof p[k] !== \"number\") return;\n    acc.sum[k] = (acc.sum[k] || 0) + p[k];\n    acc.cnt[k] = (acc.cnt[k] || 0) + 1;\n});\nflow.set(\"acc_\" + n, acc);\n\nreturn salida;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 540,
+    "y": 220,
+    "wires": [
+      [
+        "8b568e66a6422b35",
+        "31c67a4e6719963b",
+        "1f947114fd3d74e9"
+      ]
+    ]
+  },
+  {
+    "id": "8b568e66a6422b35",
+    "type": "debug",
+    "z": "686e0eaad21e114a",
+    "name": "Promedio 5 min",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 790,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "31c67a4e6719963b",
+    "type": "function",
+    "z": "686e0eaad21e114a",
+    "name": "CSV promedios (mensual)",
+    "func": "// CSV para Excel: promedios de 5 minutos, un archivo por nodo y por mes\n// Si tu Excel abre todo en UNA sola columna o interpreta mal los decimales, cambia estas dos líneas:\nconst SEP = \";\";   // separador de columnas  (\";\" Excel en español  |  \",\" Excel en inglés)\nconst DEC = \",\";   // separador decimal      (\",\" Excel en español  |  \".\" Excel en inglés)\nconst DIR = \"C:/agrivoltaico/datos/promedios_5min/\";\n\nconst NOMBRES = { 1: \"termico\", 2: \"radiacion\", 3: \"cultivo\" };\n// [clave en el JSON, nombre de la columna, decimales]\nconst COLUMNAS = {\"1\": [[\"pt1\", \"PT100_1_C\", 2], [\"pt2\", \"PT100_2_C\", 2], [\"pt3\", \"PT100_3_C\", 2], [\"temp_amb\", \"T_ambiente_C\", 2], [\"hum_amb\", \"HR_ambiente_pct\", 1], [\"presion\", \"Presion_hPa\", 1], [\"rssi\", \"RSSI_dBm\", 1], [\"snr\", \"SNR_dB\", 1]], \"2\": [[\"irr\", \"Irradiancia_Wm2\", 0], [\"uvi\", \"UVI\", 2], [\"v_panel\", \"V_panel_V\", 3], [\"i_panel\", \"I_panel_mA\", 1], [\"p_panel\", \"P_panel_mW\", 1], [\"rssi\", \"RSSI_dBm\", 1], [\"snr\", \"SNR_dB\", 1]], \"3\": [[\"suelo_temp\", \"Suelo_T_C\", 1], [\"suelo_hum\", \"Suelo_Humedad_pct\", 1], [\"ec\", \"EC_uScm\", 0], [\"sal\", \"Salinidad\", 0], [\"nitrogeno\", \"N_mgkg\", 0], [\"fosforo\", \"P_mgkg\", 0], [\"potasio\", \"K_mgkg\", 0], [\"ph\", \"pH\", 1], [\"dht_temp\", \"DHT22_T_C\", 1], [\"dht_hum\", \"DHT22_HR_pct\", 1], [\"caudal\", \"Caudal_Lmin\", 2], [\"volumen\", \"Volumen_L\", 3], [\"valvula\", \"Valvula\", 0], [\"rssi\", \"RSSI_dBm\", 1], [\"snr\", \"SNR_dB\", 1]]};\n\nconst p = msg.payload;\nif (typeof p !== \"object\" || p === null || !COLUMNAS[p.nodo] || typeof p.ts !== \"number\") return null;\nconst cols = COLUMNAS[p.nodo];\n\nconst d = new Date(p.ts);\nconst pad = (n) => String(n).padStart(2, \"0\");\nconst dia = d.getFullYear() + \"-\" + pad(d.getMonth() + 1) + \"-\" + pad(d.getDate());\nconst fecha = dia + \" \" + pad(d.getHours()) + \":\" + pad(d.getMinutes()) + \":\" + pad(d.getSeconds());\nconst sufijo = dia.slice(0, 7);\n\nconst fila = [fecha, p.nodo, (typeof p.muestras === \"number\") ? p.muestras : \"\"];\ncols.forEach(c => {\n    const v = p[c[0]];\n    const dec = (c[2] === 0 ? 1 : c[2]);\n    fila.push(typeof v === \"number\" ? v.toFixed(dec).replace(\".\", DEC) : \"\");\n});\n\nconst ruta = DIR + \"nodo\" + p.nodo + \"_\" + NOMBRES[p.nodo] + \"_\" + sufijo + \".csv\";\nlet texto = fila.join(SEP);\nif (!fs.existsSync(ruta)) {\n    // Archivo nuevo: se escribe primero la fila de encabezados\n    const cab = [\"fecha_hora\", \"nodo\", \"muestras\"].concat(cols.map(c => c[1]));\n    texto = cab.join(SEP) + \"\\n\" + texto;\n}\nmsg.filename = ruta;\nmsg.payload = texto;\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [
+      {
+        "var": "fs",
+        "module": "fs"
+      }
+    ],
+    "x": 790,
+    "y": 260,
+    "wires": [
+      [
+        "ed17d69fe6d7e225"
+      ]
+    ]
+  },
+  {
+    "id": "ed17d69fe6d7e225",
+    "type": "file",
+    "z": "686e0eaad21e114a",
+    "name": "CSV promedios",
+    "filename": "filename",
+    "filenameType": "msg",
+    "appendNewline": true,
+    "createDir": true,
+    "overwriteFile": "false",
+    "encoding": "none",
+    "x": 1010,
+    "y": 260,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "1f947114fd3d74e9",
+    "type": "link out",
+    "z": "686e0eaad21e114a",
+    "name": "promedios al dashboard",
+    "mode": "link",
+    "links": [
+      "d_li_prom"
+    ],
+    "x": 790,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "39158d9ccd89203c",
+    "type": "mqtt in",
+    "z": "686e0eaad21e114a",
+    "name": "Errores de nodos",
+    "topic": "agri/nodo/+/error",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "broker1",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 130,
+    "y": 400,
+    "wires": [
+      [
+        "aaa59c8c79dea0db"
+      ]
+    ]
+  },
+  {
+    "id": "aaa59c8c79dea0db",
+    "type": "debug",
+    "z": "686e0eaad21e114a",
+    "name": "Error de nodo",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 350,
+    "y": 400,
+    "wires": []
+  },
+  {
+    "id": "4b62949a944c564f",
+    "type": "catch",
+    "z": "686e0eaad21e114a",
+    "name": "",
+    "scope": [
+      "3cd701db86c806d9",
+      "2cbd4e0ea0f2a28a",
+      "ed17d69fe6d7e225"
+    ],
+    "uncaught": false,
+    "x": 130,
+    "y": 480,
+    "wires": [
+      [
+        "57954fd417ec5b67"
+      ]
+    ]
+  },
+  {
+    "id": "57954fd417ec5b67",
+    "type": "debug",
+    "z": "686e0eaad21e114a",
+    "name": "Error al escribir archivo",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 380,
+    "y": 480,
+    "wires": []
+  },
+  {
+    "id": "cm_riego",
+    "type": "comment",
+    "z": "tab_riego",
+    "name": "Capa determinista: humedad del suelo -> orden de riego al gateway (el automatico se activa desde el dashboard)",
+    "info": "",
+    "x": 400,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "in_cultivo",
+    "type": "mqtt in",
+    "z": "tab_riego",
+    "name": "Telemetria nodo 3",
+    "topic": "agri/nodo/3/telemetria",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "broker1",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 150,
+    "y": 120,
+    "wires": [
+      [
+        "fn_regla"
+      ]
+    ]
+  },
+  {
+    "id": "fn_regla",
+    "type": "function",
+    "z": "tab_riego",
+    "name": "Regla de riego",
+    "func": "// ===================== REGLA DE RIEGO (capa determinista) =====================\n// Interruptor y deslizadores se manejan desde el dashboard. Si Node-RED se reinicia,\n// vuelven a estos valores seguros (automático DESACTIVADO).\nconst AUTO = global.get(\"riego_auto\") === true;\nconst UMBRAL_HUM = Number(global.get(\"riego_umbral\") ?? 25);   // % de humedad del suelo\nconst DUR_RIEGO_S = Number(global.get(\"riego_dur\") ?? 60);     // segundos por riego\n// Parámetros fijos (edítalos aquí si hace falta)\nconst VENTANA = 5;                // lecturas que se promedian (evita reaccionar a un dato suelto)\nconst MIN_ENTRE_RIEGOS_S = 1800;  // espera mínima entre riegos (para que el agua se infiltre)\nconst MAX_RIEGOS_DIA = 6;\n// Condición de batería: se agregará cuando midamos vbat\n// ==============================================================================\n\nconst p = msg.payload;\nif (typeof p !== \"object\" || p === null) return null;\nconst hum = p.suelo_hum;\nif (typeof hum !== \"number\") return null;          // el sensor de suelo no respondió\n\n// Promedio móvil de la humedad\nlet h = context.get(\"hist\") || [];\nh.push(hum);\nif (h.length > VENTANA) h = h.slice(-VENTANA);\ncontext.set(\"hist\", h);\nconst prom = h.reduce((a, b) => a + b, 0) / h.length;\n\n// Contador diario de riegos\nconst d = new Date();\nconst hoy = d.getFullYear() + \"-\" + String(d.getMonth() + 1).padStart(2, \"0\") + \"-\" + String(d.getDate()).padStart(2, \"0\");\nif (context.get(\"dia\") !== hoy) { context.set(\"dia\", hoy); context.set(\"n_dia\", 0); }\nconst nDia = context.get(\"n_dia\") || 0;\nconst ultimo = context.get(\"ultimo\") || 0;\nconst ahora = Date.now();\n\n// Decisión: la primera condición que se cumpla impide el riego\nlet razon = null;\nif (!AUTO) razon = \"automatico desactivado\";\nelse if (h.length < VENTANA) razon = \"reuniendo lecturas\";\nelse if (p.valvula === 1) razon = \"ya esta regando\";\nelse if (prom >= UMBRAL_HUM) razon = \"humedad suficiente\";\nelse if (ahora - ultimo < MIN_ENTRE_RIEGOS_S * 1000) razon = \"esperando entre riegos\";\nelse if (nDia >= MAX_RIEGOS_DIA) razon = \"limite diario alcanzado\";\n\nconst texto = \"Regla de riego: \" + (razon || \"REGANDO\") + \" | humedad \" + prom.toFixed(1) + \"% (umbral \" + UMBRAL_HUM + \"%)\";\nglobal.set(\"riego_estado\", texto);\nnode.status({ fill: razon ? \"grey\" : \"green\", shape: \"dot\", text: texto });\n\nif (razon) {\n    // Solo se registra cuando cambia el motivo (evita llenar el registro)\n    if (context.get(\"ultimaRazon\") !== razon) {\n        context.set(\"ultimaRazon\", razon);\n        return [null, { payload: { ts: ahora, evento: \"sin_riego\", razon: razon, hum_prom: Math.round(prom * 10) / 10 } }];\n    }\n    return null;\n}\n\ncontext.set(\"ultimo\", ahora);\ncontext.set(\"n_dia\", nDia + 1);\ncontext.set(\"ultimaRazon\", \"regando\");\nreturn [\n    { payload: JSON.stringify({ accion: \"abrir\", seg: DUR_RIEGO_S }) },\n    { payload: { ts: ahora, evento: \"riego\", seg: DUR_RIEGO_S, hum_prom: Math.round(prom * 10) / 10, umbral: UMBRAL_HUM, riego_n_dia: nDia + 1 } }\n];",
+    "outputs": 2,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 380,
+    "y": 120,
+    "wires": [
+      [
+        "out_cmd"
+      ],
+      [
+        "fn_reglog",
+        "dbg_regla"
+      ]
+    ]
+  },
+  {
+    "id": "out_cmd",
+    "type": "mqtt out",
+    "z": "tab_riego",
+    "name": "Orden al gateway",
+    "topic": "agri/nodo/3/cmd",
+    "qos": "0",
+    "retain": "false",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "broker1",
+    "x": 650,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "fn_reglog",
+    "type": "function",
+    "z": "tab_riego",
+    "name": "Formato registro",
+    "func": "// Registro de decisiones y eventos de riego: una línea JSON por evento\nconst DIR = \"C:/agrivoltaico/datos/\";\nconst d = new Date();\nconst mes = d.getFullYear() + \"-\" + String(d.getMonth() + 1).padStart(2, \"0\");\nmsg.filename = DIR + \"riego_\" + mes + \".jsonl\";\nconst linea = (typeof msg.payload === \"object\") ? msg.payload : { evento: \"mensaje\", dato: msg.payload };\nif (!linea.ts) linea.ts = Date.now();\nmsg.payload = JSON.stringify(linea);\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 640,
+    "y": 160,
+    "wires": [
+      [
+        "file_riego"
+      ]
+    ]
+  },
+  {
+    "id": "file_riego",
+    "type": "file",
+    "z": "tab_riego",
+    "name": "Registro de riego",
+    "filename": "filename",
+    "filenameType": "msg",
+    "appendNewline": true,
+    "createDir": true,
+    "overwriteFile": "false",
+    "encoding": "none",
+    "x": 850,
+    "y": 160,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "dbg_regla",
+    "type": "debug",
+    "z": "tab_riego",
+    "name": "Decision de riego",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 650,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "inj_abrir",
+    "type": "inject",
+    "z": "tab_riego",
+    "name": "MANUAL: abrir 30 s",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"accion\":\"abrir\",\"seg\":30}",
+    "payloadType": "str",
+    "x": 160,
+    "y": 300,
+    "wires": [
+      [
+        "out_cmd"
+      ]
+    ]
+  },
+  {
+    "id": "inj_cerrar",
+    "type": "inject",
+    "z": "tab_riego",
+    "name": "MANUAL: cerrar ya",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"accion\":\"cerrar\"}",
+    "payloadType": "str",
+    "x": 160,
+    "y": 360,
+    "wires": [
+      [
+        "out_cmd"
+      ]
+    ]
+  },
+  {
+    "id": "in_evento",
+    "type": "mqtt in",
+    "z": "tab_riego",
+    "name": "Confirmacion del nodo",
+    "topic": "agri/nodo/3/evento",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "broker1",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 160,
+    "y": 440,
+    "wires": [
+      [
+        "dbg_evento",
+        "fn_reglog"
+      ]
+    ]
+  },
+  {
+    "id": "dbg_evento",
+    "type": "debug",
+    "z": "tab_riego",
+    "name": "Orden confirmada",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 430,
+    "y": 440,
+    "wires": []
+  },
+  {
+    "id": "cm_dash",
+    "type": "comment",
+    "z": "tab_dash",
+    "name": "Dashboard: http://localhost:1880/dashboard  (requiere instalar @flowfuse/node-red-dashboard)",
+    "info": "",
+    "x": 330,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "d_in1",
+    "type": "mqtt in",
+    "z": "tab_dash",
+    "name": "Telemetria nodo 1",
+    "topic": "agri/nodo/1/telemetria",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "broker1",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 150,
+    "y": 100,
+    "wires": [
+      [
+        "d_fn1"
+      ]
+    ]
+  },
+  {
+    "id": "d_in2",
+    "type": "mqtt in",
+    "z": "tab_dash",
+    "name": "Telemetria nodo 2",
+    "topic": "agri/nodo/2/telemetria",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "broker1",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 150,
+    "y": 400,
+    "wires": [
+      [
+        "d_fn2"
+      ]
+    ]
+  },
+  {
+    "id": "d_in3",
+    "type": "mqtt in",
+    "z": "tab_dash",
+    "name": "Telemetria nodo 3",
+    "topic": "agri/nodo/3/telemetria",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "broker1",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 150,
+    "y": 800,
+    "wires": [
+      [
+        "d_fn3"
+      ]
+    ]
+  },
+  {
+    "id": "d_fn1",
+    "type": "function",
+    "z": "tab_dash",
+    "name": "Repartir nodo 1",
+    "func": "// Nodo 1 (termico) -> textos y grafica\nconst p = msg.payload;\nconst t = (v, dec, u) => (typeof v === \"number\") ? { payload: v.toFixed(dec) + \" \" + u } : null;\nconst s = (nombre, v) => (typeof v === \"number\") ? { topic: nombre, payload: v } : null;\nconst graf = [s(\"PT100 #1\", p.pt1), s(\"PT100 #2\", p.pt2), s(\"PT100 #3\", p.pt3), s(\"Ambiente\", p.temp_amb)].filter(x => x);\nreturn [\n    t(p.pt1, 2, \"°C\"), t(p.pt2, 2, \"°C\"), t(p.pt3, 2, \"°C\"),\n    t(p.temp_amb, 1, \"°C\"), t(p.hum_amb, 1, \"%\"), t(p.presion, 1, \"hPa\"),\n    graf.length ? graf : null\n];",
+    "outputs": 7,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 400,
+    "y": 100,
+    "wires": [
+      [
+        "w_pt1"
+      ],
+      [
+        "w_pt2"
+      ],
+      [
+        "w_pt3"
+      ],
+      [
+        "w_tamb"
+      ],
+      [
+        "w_hamb"
+      ],
+      [
+        "w_pres"
+      ],
+      [
+        "ch_temp"
+      ]
+    ]
+  },
+  {
+    "id": "d_fn2",
+    "type": "function",
+    "z": "tab_dash",
+    "name": "Repartir nodo 2",
+    "func": "// Nodo 2 (radiacion y potencia) -> medidores, textos y graficas\nconst p = msg.payload;\nconst n = (v) => (typeof v === \"number\") ? { payload: v } : null;\nconst t = (v, dec, u) => (typeof v === \"number\") ? { payload: v.toFixed(dec) + \" \" + u } : null;\nconst s = (nombre, v) => (typeof v === \"number\") ? { topic: nombre, payload: v } : null;\nconst pW = (typeof p.p_panel === \"number\") ? p.p_panel / 1000 : undefined;   // mW -> W\nreturn [\n    n(p.irr), n(p.uvi),\n    t(p.v_panel, 2, \"V\"), t(p.i_panel, 0, \"mA\"), t(pW, 2, \"W\"),\n    s(\"Irradiancia\", p.irr), s(\"Potencia\", pW)\n];",
+    "outputs": 7,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 400,
+    "y": 400,
+    "wires": [
+      [
+        "w_irr"
+      ],
+      [
+        "w_uvi"
+      ],
+      [
+        "w_vpan"
+      ],
+      [
+        "w_ipan"
+      ],
+      [
+        "w_ppan"
+      ],
+      [
+        "ch_irr"
+      ],
+      [
+        "ch_pot"
+      ]
+    ]
+  },
+  {
+    "id": "d_fn3",
+    "type": "function",
+    "z": "tab_dash",
+    "name": "Repartir nodo 3",
+    "func": "// Nodo 3 (cultivo) -> medidor, textos y grafica\nconst p = msg.payload;\nconst n = (v) => (typeof v === \"number\") ? { payload: v } : null;\nconst t = (v, dec, u) => (typeof v === \"number\") ? { payload: v.toFixed(dec) + (u ? \" \" + u : \"\") } : null;\nconst s = (nombre, v) => (typeof v === \"number\") ? { topic: nombre, payload: v } : null;\nconst valv = (typeof p.valvula === \"number\") ? { payload: p.valvula === 1 ? \"ABIERTA\" : \"CERRADA\" } : null;\nreturn [\n    n(p.suelo_hum), t(p.suelo_temp, 1, \"°C\"), t(p.ec, 0, \"µS/cm\"), t(p.ph, 1, \"\"),\n    t(p.nitrogeno, 0, \"mg/kg\"), t(p.fosforo, 0, \"mg/kg\"), t(p.potasio, 0, \"mg/kg\"),\n    t(p.dht_temp, 1, \"°C\"), t(p.dht_hum, 1, \"%\"),\n    t(p.caudal, 2, \"L/min\"), t(p.volumen, 3, \"L\"), valv,\n    s(\"Humedad del suelo\", p.suelo_hum)\n];",
+    "outputs": 13,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 400,
+    "y": 800,
+    "wires": [
+      [
+        "w_hum"
+      ],
+      [
+        "w_stemp"
+      ],
+      [
+        "w_ec"
+      ],
+      [
+        "w_ph"
+      ],
+      [
+        "w_n"
+      ],
+      [
+        "w_p"
+      ],
+      [
+        "w_k"
+      ],
+      [
+        "w_dtemp"
+      ],
+      [
+        "w_dhum"
+      ],
+      [
+        "w_caudal"
+      ],
+      [
+        "w_vol"
+      ],
+      [
+        "w_valv"
+      ],
+      [
+        "ch_suelo"
+      ]
+    ]
+  },
+  {
+    "id": "d_li_prom",
+    "type": "link in",
+    "z": "tab_dash",
+    "name": "promedios de 5 min",
+    "links": [
+      "1f947114fd3d74e9"
+    ],
+    "x": 150,
+    "y": 1880,
+    "wires": [
+      [
+        "d_fn24"
+      ]
+    ]
+  },
+  {
+    "id": "d_fn24",
+    "type": "function",
+    "z": "tab_dash",
+    "name": "Repartir promedios",
+    "func": "// Promedios de 5 min (llegan del flujo de ingesta) -> graficas de 24 h\nconst p = msg.payload;\nif (!p || typeof p !== \"object\") return null;\nconst s = (nombre, v) => (typeof v === \"number\") ? { topic: nombre, payload: v } : null;\nconst out = [null, null, null, null];\nif (p.nodo === 1) {\n    const l = [s(\"PT100 #1\", p.pt1), s(\"PT100 #2\", p.pt2), s(\"PT100 #3\", p.pt3), s(\"Ambiente\", p.temp_amb)].filter(x => x);\n    out[0] = l.length ? l : null;\n} else if (p.nodo === 2) {\n    out[1] = s(\"Irradiancia\", p.irr);\n    out[2] = s(\"Potencia\", (typeof p.p_panel === \"number\") ? p.p_panel / 1000 : undefined);\n} else if (p.nodo === 3) {\n    out[3] = s(\"Humedad del suelo\", p.suelo_hum);\n}\nreturn out;",
+    "outputs": 4,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 400,
+    "y": 1880,
+    "wires": [
+      [
+        "ch_temp24"
+      ],
+      [
+        "ch_irr24"
+      ],
+      [
+        "ch_pot24"
+      ],
+      [
+        "ch_suelo24"
+      ]
+    ]
+  },
+  {
+    "id": "d_tick",
+    "type": "inject",
+    "z": "tab_dash",
+    "name": "cada 5 s",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "5",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "3",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 140,
+    "y": 1500,
+    "wires": [
+      [
+        "d_fn_estado"
+      ]
+    ]
+  },
+  {
+    "id": "d_fn_estado",
+    "type": "function",
+    "z": "tab_dash",
+    "name": "Estado de enlace y regla",
+    "func": "// Estado del enlace de cada nodo y de la regla de riego (se ejecuta cada 5 s)\nconst ahora = Date.now();\nconst salidas = [];\nfor (const n of [1, 2, 3]) {\n    const u = global.get(\"ultimo_\" + n);\n    if (!u || !u.ts) { salidas.push({ payload: \"Nodo \" + n + \": sin datos todavía\" }); continue; }\n    const seg = Math.round((ahora - u.ts) / 1000);\n    const hace = seg < 90 ? seg + \" s\" : Math.round(seg / 60) + \" min\";\n    if (seg <= 60) salidas.push({ payload: \"● Nodo \" + n + \" en línea · RSSI \" + u.rssi + \" dBm · SNR \" + u.snr + \" dB · hace \" + hace });\n    else salidas.push({ payload: \"○ Nodo \" + n + \" SIN SEÑAL · último dato hace \" + hace });\n}\nsalidas.push({ payload: global.get(\"riego_estado\") || \"Regla de riego: sin datos todavía\" });\nreturn salidas;",
+    "outputs": 4,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 400,
+    "y": 1500,
+    "wires": [
+      [
+        "w_e1"
+      ],
+      [
+        "w_e2"
+      ],
+      [
+        "w_e3"
+      ],
+      [
+        "w_regla"
+      ]
+    ]
+  },
+  {
+    "id": "d_fn_set",
+    "type": "function",
+    "z": "tab_dash",
+    "name": "Guardar parametros de riego",
+    "func": "// Interruptor y deslizadores del dashboard -> parámetros de la regla de riego\n// msg.topic: \"auto\" | \"umbral\" | \"dur\"\nconst k = \"riego_\" + msg.topic;\nlet v = msg.payload;\nif (msg.topic === \"auto\") v = (v === true || v === \"true\");\nelse v = Number(v);\nglobal.set(k, v);\nnode.status({ text: k + \" = \" + v });\nreturn null;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 400,
+    "y": 1260,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "d_init",
+    "type": "inject",
+    "z": "tab_dash",
+    "name": "al arrancar",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "2",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 140,
+    "y": 1200,
+    "wires": [
+      [
+        "d_fn_init"
+      ]
+    ]
+  },
+  {
+    "id": "d_fn_init",
+    "type": "function",
+    "z": "tab_dash",
+    "name": "Valores seguros iniciales",
+    "func": "// Valores seguros al arrancar: automatico apagado\nglobal.set(\"riego_auto\", false);\nglobal.set(\"riego_umbral\", 25);\nglobal.set(\"riego_dur\", 60);\nreturn [{ payload: false }, { payload: 25 }, { payload: 60 }];",
+    "outputs": 3,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 400,
+    "y": 1200,
+    "wires": [
+      [
+        "sw_auto"
+      ],
+      [
+        "sl_umbral"
+      ],
+      [
+        "sl_dur"
+      ]
+    ]
+  },
+  {
+    "id": "d_out_cmd",
+    "type": "mqtt out",
+    "z": "tab_dash",
+    "name": "Orden al gateway",
+    "topic": "agri/nodo/3/cmd",
+    "qos": "0",
+    "retain": "false",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "broker1",
+    "x": 400,
+    "y": 1400,
+    "wires": []
+  },
+  {
+    "id": "w_irr",
+    "type": "ui-gauge",
+    "z": "tab_dash",
+    "name": "",
+    "group": "g_panel",
+    "order": 1,
+    "width": 3,
+    "height": 3,
+    "gtype": "gauge-half",
+    "gstyle": "needle",
+    "title": "Irradiancia",
+    "units": "W/m²",
+    "icon": "",
+    "prefix": "",
+    "suffix": "",
+    "segments": [
+      {
+        "from": "0",
+        "color": "#4a90d9"
+      },
+      {
+        "from": "400",
+        "color": "#f5c518"
+      },
+      {
+        "from": "800",
+        "color": "#f08c00"
+      }
+    ],
+    "min": 0,
+    "max": 1200,
+    "sizeThickness": 16,
+    "sizeGap": 4,
+    "sizeKeyThickness": 8,
+    "styleRounded": true,
+    "styleGlow": false,
+    "className": "",
+    "x": 1060,
+    "y": 100,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "w_uvi",
+    "type": "ui-gauge",
+    "z": "tab_dash",
+    "name": "",
+    "group": "g_panel",
+    "order": 2,
+    "width": 3,
+    "height": 3,
+    "gtype": "gauge-half",
+    "gstyle": "needle",
+    "title": "Indice UV",
+    "units": "",
+    "icon": "",
+    "prefix": "",
+    "suffix": "",
+    "segments": [
+      {
+        "from": "0",
+        "color": "#5cd65c"
+      },
+      {
+        "from": "3",
+        "color": "#f5c518"
+      },
+      {
+        "from": "6",
+        "color": "#f08c00"
+      },
+      {
+        "from": "8",
+        "color": "#ea5353"
+      },
+      {
+        "from": "11",
+        "color": "#9b59b6"
+      }
+    ],
+    "min": 0,
+    "max": 12,
+    "sizeThickness": 16,
+    "sizeGap": 4,
+    "sizeKeyThickness": 8,
+    "styleRounded": true,
+    "styleGlow": false,
+    "className": "",
+    "x": 1060,
+    "y": 160,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "w_vpan",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_panel",
+    "order": 3,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Voltaje del panel",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "w_ipan",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_panel",
+    "order": 4,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Corriente del panel",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 260,
+    "wires": []
+  },
+  {
+    "id": "w_ppan",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_panel",
+    "order": 5,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Potencia del panel",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 300,
+    "wires": []
+  },
+  {
+    "id": "w_pt1",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_term",
+    "order": 1,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "PT100 #1",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 360,
+    "wires": []
+  },
+  {
+    "id": "w_pt2",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_term",
+    "order": 2,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "PT100 #2",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 400,
+    "wires": []
+  },
+  {
+    "id": "w_pt3",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_term",
+    "order": 3,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "PT100 #3",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 440,
+    "wires": []
+  },
+  {
+    "id": "w_tamb",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_term",
+    "order": 4,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Temperatura ambiente",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 480,
+    "wires": []
+  },
+  {
+    "id": "w_hamb",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_term",
+    "order": 5,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Humedad relativa ambiente",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 520,
+    "wires": []
+  },
+  {
+    "id": "w_pres",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_term",
+    "order": 6,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Presion atmosferica",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 560,
+    "wires": []
+  },
+  {
+    "id": "w_hum",
+    "type": "ui-gauge",
+    "z": "tab_dash",
+    "name": "",
+    "group": "g_cultivo",
+    "order": 1,
+    "width": 6,
+    "height": 3,
+    "gtype": "gauge-half",
+    "gstyle": "needle",
+    "title": "Humedad del suelo",
+    "units": "%",
+    "icon": "",
+    "prefix": "",
+    "suffix": "",
+    "segments": [
+      {
+        "from": "0",
+        "color": "#ea5353"
+      },
+      {
+        "from": "20",
+        "color": "#f5c518"
+      },
+      {
+        "from": "30",
+        "color": "#5cd65c"
+      },
+      {
+        "from": "60",
+        "color": "#4a90d9"
+      }
+    ],
+    "min": 0,
+    "max": 100,
+    "sizeThickness": 16,
+    "sizeGap": 4,
+    "sizeKeyThickness": 8,
+    "styleRounded": true,
+    "styleGlow": false,
+    "className": "",
+    "x": 1060,
+    "y": 620,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "w_stemp",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_cultivo",
+    "order": 2,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Temperatura del suelo",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 680,
+    "wires": []
+  },
+  {
+    "id": "w_ec",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_cultivo",
+    "order": 3,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Conductividad (EC)",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 720,
+    "wires": []
+  },
+  {
+    "id": "w_ph",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_cultivo",
+    "order": 4,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "pH",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 760,
+    "wires": []
+  },
+  {
+    "id": "w_n",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_cultivo",
+    "order": 5,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Nitrogeno (N)",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 800,
+    "wires": []
+  },
+  {
+    "id": "w_p",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_cultivo",
+    "order": 6,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Fosforo (P)",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 840,
+    "wires": []
+  },
+  {
+    "id": "w_k",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_cultivo",
+    "order": 7,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Potasio (K)",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 880,
+    "wires": []
+  },
+  {
+    "id": "w_dtemp",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_cultivo",
+    "order": 8,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Temperatura del aire (DHT22)",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 920,
+    "wires": []
+  },
+  {
+    "id": "w_dhum",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_cultivo",
+    "order": 9,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Humedad del aire (DHT22)",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 960,
+    "wires": []
+  },
+  {
+    "id": "w_valv",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_riego",
+    "order": 1,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Electrovalvula",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 1020,
+    "wires": []
+  },
+  {
+    "id": "w_caudal",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_riego",
+    "order": 2,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Caudal",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 1060,
+    "wires": []
+  },
+  {
+    "id": "w_vol",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_riego",
+    "order": 3,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "Agua acumulada",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 1100,
+    "wires": []
+  },
+  {
+    "id": "w_regla",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_riego",
+    "order": 4,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "col-center",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": true,
+    "className": "",
+    "x": 1060,
+    "y": 1140,
+    "wires": []
+  },
+  {
+    "id": "sw_auto",
+    "type": "ui-switch",
+    "z": "tab_dash",
+    "name": "",
+    "label": "Riego automatico",
+    "group": "g_riego",
+    "order": 5,
+    "width": 6,
+    "height": 1,
+    "passthru": false,
+    "decouple": "false",
+    "topic": "auto",
+    "topicType": "str",
+    "style": "",
+    "className": "",
+    "onvalue": "true",
+    "onvalueType": "bool",
+    "onicon": "",
+    "oncolor": "",
+    "offvalue": "false",
+    "offvalueType": "bool",
+    "officon": "",
+    "offcolor": "",
+    "x": 1060,
+    "y": 1200,
+    "wires": [
+      [
+        "d_fn_set"
+      ]
+    ]
+  },
+  {
+    "id": "sl_umbral",
+    "type": "ui-slider",
+    "z": "tab_dash",
+    "group": "g_riego",
+    "name": "",
+    "label": "Umbral de humedad (%)",
+    "tooltip": "",
+    "order": 6,
+    "width": 6,
+    "height": 1,
+    "passthru": false,
+    "outs": "end",
+    "topic": "umbral",
+    "topicType": "str",
+    "thumbLabel": "always",
+    "showTicks": "always",
+    "min": 5,
+    "max": 60,
+    "step": 1,
+    "className": "",
+    "iconPrepend": "",
+    "iconAppend": "",
+    "color": "",
+    "colorTrack": "",
+    "colorThumb": "",
+    "showTextField": false,
+    "x": 1060,
+    "y": 1260,
+    "wires": [
+      [
+        "d_fn_set"
+      ]
+    ]
+  },
+  {
+    "id": "sl_dur",
+    "type": "ui-slider",
+    "z": "tab_dash",
+    "group": "g_riego",
+    "name": "",
+    "label": "Duracion del riego (s)",
+    "tooltip": "",
+    "order": 7,
+    "width": 6,
+    "height": 1,
+    "passthru": false,
+    "outs": "end",
+    "topic": "dur",
+    "topicType": "str",
+    "thumbLabel": "always",
+    "showTicks": "always",
+    "min": 10,
+    "max": 300,
+    "step": 10,
+    "className": "",
+    "iconPrepend": "",
+    "iconAppend": "",
+    "color": "",
+    "colorTrack": "",
+    "colorThumb": "",
+    "showTextField": false,
+    "x": 1060,
+    "y": 1320,
+    "wires": [
+      [
+        "d_fn_set"
+      ]
+    ]
+  },
+  {
+    "id": "btn_abrir",
+    "type": "ui-button",
+    "z": "tab_dash",
+    "group": "g_riego",
+    "name": "",
+    "label": "Abrir 30 s",
+    "order": 8,
+    "width": 3,
+    "height": 1,
+    "emulateClick": false,
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "#1565c0",
+    "className": "",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "{\"accion\":\"abrir\",\"seg\":30}",
+    "payloadType": "str",
+    "topic": "topic",
+    "topicType": "msg",
+    "buttonColor": "#1565c0",
+    "textColor": "#ffffff",
+    "iconColor": "",
+    "enableClick": true,
+    "enablePointerdown": false,
+    "pointerdownPayload": "",
+    "pointerdownPayloadType": "str",
+    "enablePointerup": false,
+    "pointerupPayload": "",
+    "pointerupPayloadType": "str",
+    "x": 1060,
+    "y": 1380,
+    "wires": [
+      [
+        "d_out_cmd",
+        "d_fn_orden"
+      ]
+    ]
+  },
+  {
+    "id": "btn_cerrar",
+    "type": "ui-button",
+    "z": "tab_dash",
+    "group": "g_riego",
+    "name": "",
+    "label": "Cerrar ya",
+    "order": 9,
+    "width": 3,
+    "height": 1,
+    "emulateClick": false,
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "#c62828",
+    "className": "",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "{\"accion\":\"cerrar\"}",
+    "payloadType": "str",
+    "topic": "topic",
+    "topicType": "msg",
+    "buttonColor": "#c62828",
+    "textColor": "#ffffff",
+    "iconColor": "",
+    "enableClick": true,
+    "enablePointerdown": false,
+    "pointerdownPayload": "",
+    "pointerdownPayloadType": "str",
+    "enablePointerup": false,
+    "pointerupPayload": "",
+    "pointerupPayloadType": "str",
+    "x": 1060,
+    "y": 1440,
+    "wires": [
+      [
+        "d_out_cmd",
+        "d_fn_orden"
+      ]
+    ]
+  },
+  {
+    "id": "w_e1",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_enlace",
+    "order": 1,
+    "width": 12,
+    "height": 1,
+    "name": "",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "col-center",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 1500,
+    "wires": []
+  },
+  {
+    "id": "w_e2",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_enlace",
+    "order": 2,
+    "width": 12,
+    "height": 1,
+    "name": "",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "col-center",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 1540,
+    "wires": []
+  },
+  {
+    "id": "w_e3",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_enlace",
+    "order": 3,
+    "width": 12,
+    "height": 1,
+    "name": "",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "col-center",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#717171",
+    "wrapText": false,
+    "className": "",
+    "x": 1060,
+    "y": 1580,
+    "wires": []
+  },
+  {
+    "id": "ch_temp",
+    "type": "ui-chart",
+    "z": "tab_dash",
+    "group": "g_live",
+    "name": "",
+    "label": "Temperaturas (°C)",
+    "order": 1,
+    "chartType": "line",
+    "category": "topic",
+    "categoryType": "msg",
+    "xAxisLabel": "",
+    "xAxisProperty": "",
+    "xAxisPropertyType": "msg",
+    "xAxisType": "time",
+    "xAxisFormat": "",
+    "xAxisFormatType": "auto",
+    "yAxisLabel": "",
+    "yAxisProperty": "payload",
+    "yAxisPropertyType": "msg",
+    "ymin": "",
+    "ymax": "",
+    "action": "append",
+    "stackSeries": false,
+    "pointShape": "false",
+    "pointRadius": 2,
+    "showLegend": true,
+    "removeOlder": 1,
+    "removeOlderUnit": "3600",
+    "removeOlderPoints": "",
+    "colors": [
+      "#0095ff",
+      "#ff0000",
+      "#ff7f0e",
+      "#2ca02c",
+      "#a347e1",
+      "#d62728",
+      "#ff9896",
+      "#9467bd",
+      "#c5b0d5"
+    ],
+    "textColor": [
+      "#666666"
+    ],
+    "textColorDefault": true,
+    "gridColor": [
+      "#e5e5e5"
+    ],
+    "gridColorDefault": true,
+    "width": 6,
+    "height": 5,
+    "className": "",
+    "interpolation": "linear",
+    "x": 1060,
+    "y": 1640,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "ch_irr",
+    "type": "ui-chart",
+    "z": "tab_dash",
+    "group": "g_live",
+    "name": "",
+    "label": "Irradiancia (W/m²)",
+    "order": 2,
+    "chartType": "line",
+    "category": "topic",
+    "categoryType": "msg",
+    "xAxisLabel": "",
+    "xAxisProperty": "",
+    "xAxisPropertyType": "msg",
+    "xAxisType": "time",
+    "xAxisFormat": "",
+    "xAxisFormatType": "auto",
+    "yAxisLabel": "",
+    "yAxisProperty": "payload",
+    "yAxisPropertyType": "msg",
+    "ymin": "0",
+    "ymax": "",
+    "action": "append",
+    "stackSeries": false,
+    "pointShape": "false",
+    "pointRadius": 2,
+    "showLegend": true,
+    "removeOlder": 1,
+    "removeOlderUnit": "3600",
+    "removeOlderPoints": "",
+    "colors": [
+      "#0095ff",
+      "#ff0000",
+      "#ff7f0e",
+      "#2ca02c",
+      "#a347e1",
+      "#d62728",
+      "#ff9896",
+      "#9467bd",
+      "#c5b0d5"
+    ],
+    "textColor": [
+      "#666666"
+    ],
+    "textColorDefault": true,
+    "gridColor": [
+      "#e5e5e5"
+    ],
+    "gridColorDefault": true,
+    "width": 6,
+    "height": 5,
+    "className": "",
+    "interpolation": "linear",
+    "x": 1060,
+    "y": 1700,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "ch_pot",
+    "type": "ui-chart",
+    "z": "tab_dash",
+    "group": "g_live",
+    "name": "",
+    "label": "Potencia del panel (W)",
+    "order": 3,
+    "chartType": "line",
+    "category": "topic",
+    "categoryType": "msg",
+    "xAxisLabel": "",
+    "xAxisProperty": "",
+    "xAxisPropertyType": "msg",
+    "xAxisType": "time",
+    "xAxisFormat": "",
+    "xAxisFormatType": "auto",
+    "yAxisLabel": "",
+    "yAxisProperty": "payload",
+    "yAxisPropertyType": "msg",
+    "ymin": "0",
+    "ymax": "",
+    "action": "append",
+    "stackSeries": false,
+    "pointShape": "false",
+    "pointRadius": 2,
+    "showLegend": true,
+    "removeOlder": 1,
+    "removeOlderUnit": "3600",
+    "removeOlderPoints": "",
+    "colors": [
+      "#0095ff",
+      "#ff0000",
+      "#ff7f0e",
+      "#2ca02c",
+      "#a347e1",
+      "#d62728",
+      "#ff9896",
+      "#9467bd",
+      "#c5b0d5"
+    ],
+    "textColor": [
+      "#666666"
+    ],
+    "textColorDefault": true,
+    "gridColor": [
+      "#e5e5e5"
+    ],
+    "gridColorDefault": true,
+    "width": 6,
+    "height": 5,
+    "className": "",
+    "interpolation": "linear",
+    "x": 1060,
+    "y": 1760,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "ch_suelo",
+    "type": "ui-chart",
+    "z": "tab_dash",
+    "group": "g_live",
+    "name": "",
+    "label": "Humedad del suelo (%)",
+    "order": 4,
+    "chartType": "line",
+    "category": "topic",
+    "categoryType": "msg",
+    "xAxisLabel": "",
+    "xAxisProperty": "",
+    "xAxisPropertyType": "msg",
+    "xAxisType": "time",
+    "xAxisFormat": "",
+    "xAxisFormatType": "auto",
+    "yAxisLabel": "",
+    "yAxisProperty": "payload",
+    "yAxisPropertyType": "msg",
+    "ymin": "0",
+    "ymax": "100",
+    "action": "append",
+    "stackSeries": false,
+    "pointShape": "false",
+    "pointRadius": 2,
+    "showLegend": true,
+    "removeOlder": 1,
+    "removeOlderUnit": "3600",
+    "removeOlderPoints": "",
+    "colors": [
+      "#0095ff",
+      "#ff0000",
+      "#ff7f0e",
+      "#2ca02c",
+      "#a347e1",
+      "#d62728",
+      "#ff9896",
+      "#9467bd",
+      "#c5b0d5"
+    ],
+    "textColor": [
+      "#666666"
+    ],
+    "textColorDefault": true,
+    "gridColor": [
+      "#e5e5e5"
+    ],
+    "gridColorDefault": true,
+    "width": 6,
+    "height": 5,
+    "className": "",
+    "interpolation": "linear",
+    "x": 1060,
+    "y": 1820,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "ch_temp24",
+    "type": "ui-chart",
+    "z": "tab_dash",
+    "group": "g_24h",
+    "name": "",
+    "label": "Temperaturas (°C)",
+    "order": 1,
+    "chartType": "line",
+    "category": "topic",
+    "categoryType": "msg",
+    "xAxisLabel": "",
+    "xAxisProperty": "",
+    "xAxisPropertyType": "msg",
+    "xAxisType": "time",
+    "xAxisFormat": "",
+    "xAxisFormatType": "auto",
+    "yAxisLabel": "",
+    "yAxisProperty": "payload",
+    "yAxisPropertyType": "msg",
+    "ymin": "",
+    "ymax": "",
+    "action": "append",
+    "stackSeries": false,
+    "pointShape": "false",
+    "pointRadius": 2,
+    "showLegend": true,
+    "removeOlder": 24,
+    "removeOlderUnit": "3600",
+    "removeOlderPoints": "",
+    "colors": [
+      "#0095ff",
+      "#ff0000",
+      "#ff7f0e",
+      "#2ca02c",
+      "#a347e1",
+      "#d62728",
+      "#ff9896",
+      "#9467bd",
+      "#c5b0d5"
+    ],
+    "textColor": [
+      "#666666"
+    ],
+    "textColorDefault": true,
+    "gridColor": [
+      "#e5e5e5"
+    ],
+    "gridColorDefault": true,
+    "width": 6,
+    "height": 5,
+    "className": "",
+    "interpolation": "linear",
+    "x": 1060,
+    "y": 1880,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "ch_irr24",
+    "type": "ui-chart",
+    "z": "tab_dash",
+    "group": "g_24h",
+    "name": "",
+    "label": "Irradiancia (W/m²)",
+    "order": 2,
+    "chartType": "line",
+    "category": "topic",
+    "categoryType": "msg",
+    "xAxisLabel": "",
+    "xAxisProperty": "",
+    "xAxisPropertyType": "msg",
+    "xAxisType": "time",
+    "xAxisFormat": "",
+    "xAxisFormatType": "auto",
+    "yAxisLabel": "",
+    "yAxisProperty": "payload",
+    "yAxisPropertyType": "msg",
+    "ymin": "0",
+    "ymax": "",
+    "action": "append",
+    "stackSeries": false,
+    "pointShape": "false",
+    "pointRadius": 2,
+    "showLegend": true,
+    "removeOlder": 24,
+    "removeOlderUnit": "3600",
+    "removeOlderPoints": "",
+    "colors": [
+      "#0095ff",
+      "#ff0000",
+      "#ff7f0e",
+      "#2ca02c",
+      "#a347e1",
+      "#d62728",
+      "#ff9896",
+      "#9467bd",
+      "#c5b0d5"
+    ],
+    "textColor": [
+      "#666666"
+    ],
+    "textColorDefault": true,
+    "gridColor": [
+      "#e5e5e5"
+    ],
+    "gridColorDefault": true,
+    "width": 6,
+    "height": 5,
+    "className": "",
+    "interpolation": "linear",
+    "x": 1060,
+    "y": 1940,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "ch_pot24",
+    "type": "ui-chart",
+    "z": "tab_dash",
+    "group": "g_24h",
+    "name": "",
+    "label": "Potencia del panel (W)",
+    "order": 3,
+    "chartType": "line",
+    "category": "topic",
+    "categoryType": "msg",
+    "xAxisLabel": "",
+    "xAxisProperty": "",
+    "xAxisPropertyType": "msg",
+    "xAxisType": "time",
+    "xAxisFormat": "",
+    "xAxisFormatType": "auto",
+    "yAxisLabel": "",
+    "yAxisProperty": "payload",
+    "yAxisPropertyType": "msg",
+    "ymin": "0",
+    "ymax": "",
+    "action": "append",
+    "stackSeries": false,
+    "pointShape": "false",
+    "pointRadius": 2,
+    "showLegend": true,
+    "removeOlder": 24,
+    "removeOlderUnit": "3600",
+    "removeOlderPoints": "",
+    "colors": [
+      "#0095ff",
+      "#ff0000",
+      "#ff7f0e",
+      "#2ca02c",
+      "#a347e1",
+      "#d62728",
+      "#ff9896",
+      "#9467bd",
+      "#c5b0d5"
+    ],
+    "textColor": [
+      "#666666"
+    ],
+    "textColorDefault": true,
+    "gridColor": [
+      "#e5e5e5"
+    ],
+    "gridColorDefault": true,
+    "width": 6,
+    "height": 5,
+    "className": "",
+    "interpolation": "linear",
+    "x": 1060,
+    "y": 2000,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "ch_suelo24",
+    "type": "ui-chart",
+    "z": "tab_dash",
+    "group": "g_24h",
+    "name": "",
+    "label": "Humedad del suelo (%)",
+    "order": 4,
+    "chartType": "line",
+    "category": "topic",
+    "categoryType": "msg",
+    "xAxisLabel": "",
+    "xAxisProperty": "",
+    "xAxisPropertyType": "msg",
+    "xAxisType": "time",
+    "xAxisFormat": "",
+    "xAxisFormatType": "auto",
+    "yAxisLabel": "",
+    "yAxisProperty": "payload",
+    "yAxisPropertyType": "msg",
+    "ymin": "0",
+    "ymax": "100",
+    "action": "append",
+    "stackSeries": false,
+    "pointShape": "false",
+    "pointRadius": 2,
+    "showLegend": true,
+    "removeOlder": 24,
+    "removeOlderUnit": "3600",
+    "removeOlderPoints": "",
+    "colors": [
+      "#0095ff",
+      "#ff0000",
+      "#ff7f0e",
+      "#2ca02c",
+      "#a347e1",
+      "#d62728",
+      "#ff9896",
+      "#9467bd",
+      "#c5b0d5"
+    ],
+    "textColor": [
+      "#666666"
+    ],
+    "textColorDefault": true,
+    "gridColor": [
+      "#e5e5e5"
+    ],
+    "gridColorDefault": true,
+    "width": 6,
+    "height": 5,
+    "className": "",
+    "interpolation": "linear",
+    "x": 1060,
+    "y": 2060,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "w_ia_res",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_ia",
+    "order": 1,
+    "width": 12,
+    "height": 1,
+    "name": "",
+    "label": "Resumen",
+    "format": "{{msg.payload}}",
+    "layout": "col-left",
+    "style": false,
+    "font": "",
+    "fontSize": 15,
+    "color": "#555555",
+    "wrapText": true,
+    "className": "",
+    "x": 1060,
+    "y": 2200,
+    "wires": []
+  },
+  {
+    "id": "w_ia_alert",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_ia",
+    "order": 2,
+    "width": 12,
+    "height": 1,
+    "name": "",
+    "label": "Alertas",
+    "format": "{{msg.payload}}",
+    "layout": "col-left",
+    "style": false,
+    "font": "",
+    "fontSize": 15,
+    "color": "#555555",
+    "wrapText": true,
+    "className": "",
+    "x": 1060,
+    "y": 2260,
+    "wires": []
+  },
+  {
+    "id": "w_ia_reco",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_ia",
+    "order": 3,
+    "width": 12,
+    "height": 1,
+    "name": "",
+    "label": "Recomendaciones",
+    "format": "{{msg.payload}}",
+    "layout": "col-left",
+    "style": false,
+    "font": "",
+    "fontSize": 15,
+    "color": "#555555",
+    "wrapText": true,
+    "className": "",
+    "x": 1060,
+    "y": 2320,
+    "wires": []
+  },
+  {
+    "id": "w_ia_ener",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_ia",
+    "order": 4,
+    "width": 12,
+    "height": 1,
+    "name": "",
+    "label": "Energia solar",
+    "format": "{{msg.payload}}",
+    "layout": "col-left",
+    "style": false,
+    "font": "",
+    "fontSize": 15,
+    "color": "#555555",
+    "wrapText": true,
+    "className": "",
+    "x": 1060,
+    "y": 2380,
+    "wires": []
+  },
+  {
+    "id": "w_ia_meta",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_ia",
+    "order": 5,
+    "width": 12,
+    "height": 1,
+    "name": "",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "col-left",
+    "style": false,
+    "font": "",
+    "fontSize": 15,
+    "color": "#555555",
+    "wrapText": true,
+    "className": "",
+    "x": 1060,
+    "y": 2440,
+    "wires": []
+  },
+  {
+    "id": "btn_ia",
+    "type": "ui-button",
+    "z": "tab_dash",
+    "group": "g_ia",
+    "name": "",
+    "label": "Pedir diagnostico ahora",
+    "order": 6,
+    "width": 6,
+    "height": 1,
+    "emulateClick": false,
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "#2e7d32",
+    "className": "",
+    "icon": "",
+    "iconPosition": "left",
+    "payload": "",
+    "payloadType": "date",
+    "topic": "topic",
+    "topicType": "msg",
+    "buttonColor": "#2e7d32",
+    "textColor": "#ffffff",
+    "iconColor": "",
+    "enableClick": true,
+    "enablePointerdown": false,
+    "pointerdownPayload": "",
+    "pointerdownPayloadType": "str",
+    "enablePointerup": false,
+    "pointerupPayload": "",
+    "pointerupPayloadType": "str",
+    "x": 1060,
+    "y": 2500,
+    "wires": [
+      [
+        "d_http_ia"
+      ]
+    ]
+  },
+  {
+    "id": "d_in_ia",
+    "type": "mqtt in",
+    "z": "tab_dash",
+    "name": "Diagnostico de la IA",
+    "topic": "agri/ia/diagnostico",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "broker1",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 150,
+    "y": 2200,
+    "wires": [
+      [
+        "d_fn_ia"
+      ]
+    ]
+  },
+  {
+    "id": "d_fn_ia",
+    "type": "function",
+    "z": "tab_dash",
+    "name": "Repartir diagnostico",
+    "func": "// Diagnostico publicado por Node-RED (retenido) -> textos del dashboard\nconst d = msg.payload;                       // {ts, modelo, duracion_s, valido, diagnostico}\nif (!d || !d.diagnostico) return null;\nconst g = d.diagnostico;\nconst lista = (a) => (a && a.length) ? a.map(x => \"• \" + x).join(\"   \") : \"Sin elementos\";\nconst f = new Date(d.ts);\nconst pad = (n) => String(n).padStart(2, \"0\");\nconst fecha = f.getFullYear() + \"-\" + pad(f.getMonth() + 1) + \"-\" + pad(f.getDate()) + \" \" + pad(f.getHours()) + \":\" + pad(f.getMinutes());\nreturn [\n    { payload: g.resumen || \"—\" },\n    { payload: lista(g.alertas) },\n    { payload: lista(g.recomendaciones) },\n    { payload: g.prediccion_energia || \"—\" },\n    { payload: \"Ultimo diagnostico: \" + fecha + \" · \" + (d.modelo || \"\") + (d.duracion_s ? \" · \" + d.duracion_s + \" s de calculo\" : \"\") + (d.valido ? \"\" : \" · RESPUESTA NO VALIDA\") }\n];",
+    "outputs": 5,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 400,
+    "y": 2200,
+    "wires": [
+      [
+        "w_ia_res"
+      ],
+      [
+        "w_ia_alert"
+      ],
+      [
+        "w_ia_reco"
+      ],
+      [
+        "w_ia_ener"
+      ],
+      [
+        "w_ia_meta"
+      ]
+    ]
+  },
+  {
+    "id": "d_http_ia",
+    "type": "http request",
+    "z": "tab_dash",
+    "name": "Disparar flujo de n8n",
+    "method": "GET",
+    "ret": "txt",
+    "paytoqs": "ignore",
+    "url": "http://127.0.0.1:5678/webhook/diagnostico-agri",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "insecureHTTPParser": false,
+    "authType": "",
+    "senderr": false,
+    "headers": [],
+    "x": 400,
+    "y": 2500,
+    "wires": [
+      [
+        "d_dbg_ia"
+      ]
+    ]
+  },
+  {
+    "id": "d_dbg_ia",
+    "type": "debug",
+    "z": "tab_dash",
+    "name": "Respuesta de n8n",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 650,
+    "y": 2500,
+    "wires": []
+  },
+  {
+    "id": "w_orden",
+    "type": "ui-text",
+    "z": "tab_dash",
+    "group": "g_riego",
+    "order": 10,
+    "width": 6,
+    "height": 1,
+    "name": "",
+    "label": "",
+    "format": "{{msg.payload}}",
+    "layout": "col-center",
+    "style": false,
+    "font": "",
+    "fontSize": 14,
+    "color": "#555555",
+    "wrapText": true,
+    "className": "",
+    "x": 1060,
+    "y": 1500,
+    "wires": []
+  },
+  {
+    "id": "d_notif",
+    "type": "ui-notification",
+    "z": "tab_dash",
+    "ui": "ui_base",
+    "position": "top right",
+    "colorDefault": true,
+    "color": "#000000",
+    "displayTime": "6",
+    "showCountdown": true,
+    "outputs": 0,
+    "allowDismiss": true,
+    "dismissText": "Cerrar",
+    "allowConfirm": false,
+    "confirmText": "Confirmar",
+    "raw": false,
+    "className": "",
+    "name": "Avisos de riego",
+    "x": 1060,
+    "y": 1460,
+    "wires": []
+  },
+  {
+    "id": "d_fn_orden",
+    "type": "function",
+    "z": "tab_dash",
+    "name": "Aviso al pulsar",
+    "func": "// Se ejecuta al pulsar \"Abrir\" o \"Cerrar\": avisa en pantalla y vigila que llegue la confirmacion\nlet a = {};\ntry { a = JSON.parse(msg.payload); } catch (e) { /* ignorar */ }\nconst accion = (a.accion === \"cerrar\") ? \"CERRAR\" : \"ABRIR \" + (a.seg || \"\") + \" s\";\nconst t = Date.now();\nflow.set(\"orden_t\", t);\nconst texto = \"Orden enviada (\" + accion + \"). Esperando al gateway...\";\nsetTimeout(() => {\n    if (flow.get(\"orden_t\") === t) {\n        node.send([{ payload: \"Sin confirmacion del nodo 3. Revisa el gateway.\", color: \"red\" },\n                   { payload: \"SIN CONFIRMACION: la orden (\" + accion + \") no fue confirmada\" }]);\n    }\n}, 40000);\nreturn [{ payload: texto, color: \"blue\" }, { payload: texto }];",
+    "outputs": 2,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 650,
+    "y": 1440,
+    "wires": [
+      [
+        "d_notif"
+      ],
+      [
+        "w_orden"
+      ]
+    ]
+  },
+  {
+    "id": "d_in_evento",
+    "type": "mqtt in",
+    "z": "tab_dash",
+    "name": "Eventos de la valvula",
+    "topic": "agri/nodo/3/evento",
+    "qos": "0",
+    "datatype": "json",
+    "broker": "broker1",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 150,
+    "y": 1560,
+    "wires": [
+      [
+        "d_fn_evento"
+      ]
+    ]
+  },
+  {
+    "id": "d_fn_evento",
+    "type": "function",
+    "z": "tab_dash",
+    "name": "Aviso de eventos",
+    "func": "// Eventos que publica el gateway sobre la valvula (agri/nodo/3/evento)\nconst e = msg.payload;\nif (!e || typeof e !== \"object\") return null;\nif (e.estado === \"recibida\") {\n    const t = \"El gateway recibio la orden #\" + e.orden + \". Falta la confirmacion del nodo 3...\";\n    return [{ payload: t, color: \"blue\" }, { payload: t }];\n}\nif (typeof e.valvula === \"number\") {\n    flow.set(\"orden_t\", 0);          // confirmada: se cancela la alarma de falta de confirmacion\n    const t = \"Nodo 3 confirmo la orden #\" + e.orden + \": valvula \" + (e.valvula === 1 ? \"ABIERTA\" : \"CERRADA\");\n    return [{ payload: t, color: \"green\" }, { payload: t }];\n}\nreturn null;",
+    "outputs": 2,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 400,
+    "y": 1560,
+    "wires": [
+      [
+        "d_notif"
+      ],
+      [
+        "w_orden"
+      ]
+    ]
+  },
+  {
+    "id": "cm_ia",
+    "type": "comment",
+    "z": "tab_ia",
+    "name": "Capa predictiva: n8n pide el resumen de 24 h, consulta a Ollama y devuelve el diagnostico aqui",
+    "info": "",
+    "x": 380,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "http_res",
+    "type": "http in",
+    "z": "tab_ia",
+    "name": "",
+    "url": "/api/resumen24h",
+    "method": "get",
+    "upload": false,
+    "skipBodyParsing": false,
+    "swaggerDoc": "",
+    "x": 150,
+    "y": 120,
+    "wires": [
+      [
+        "fn_resumen"
+      ]
+    ]
+  },
+  {
+    "id": "fn_resumen",
+    "type": "function",
+    "z": "tab_ia",
+    "name": "Resumen 24 h (lee los CSV)",
+    "func": "// Resumen de las últimas 24 h para el asesor de IA.\n// Lee los CSV de promedios de 5 min (sobreviven a reinicios) y devuelve un JSON compacto.\nconst SEP = \";\";    // deben coincidir con los nodos de CSV del flujo de ingesta\nconst DEC = \",\";\nconst DIR = \"C:/agrivoltaico/datos/\";\nconst HORAS = 24;\nconst NOMBRES = { 1: \"termico\", 2: \"radiacion\", 3: \"cultivo\" };\nconst ROL = { 1: \"temperaturas (PT100 y aire junto al panel)\", 2: \"radiacion solar y potencia del panel\", 3: \"cultivo (suelo, aire y riego)\" };\n// [columna del CSV, nombre para el modelo, factor]\nconst VARIABLES = {\n    1: [[\"PT100_1_C\", \"pt100_1_C\"], [\"PT100_2_C\", \"pt100_2_C\"], [\"PT100_3_C\", \"pt100_3_C\"],\n        [\"T_ambiente_C\", \"temp_ambiente_C\"], [\"HR_ambiente_pct\", \"humedad_aire_pct\"], [\"Presion_hPa\", \"presion_hPa\"]],\n    2: [[\"Irradiancia_Wm2\", \"irradiancia_Wm2\"], [\"UVI\", \"indice_uv\"], [\"V_panel_V\", \"voltaje_panel_V\"],\n        [\"I_panel_mA\", \"corriente_panel_mA\"], [\"P_panel_mW\", \"potencia_panel_W\", 0.001]],\n    3: [[\"Suelo_T_C\", \"suelo_temp_C\"], [\"Suelo_Humedad_pct\", \"suelo_humedad_pct\"], [\"EC_uScm\", \"suelo_EC_uScm\"],\n        [\"pH\", \"suelo_pH\"], [\"N_mgkg\", \"N_mgkg\"], [\"P_mgkg\", \"P_mgkg\"], [\"K_mgkg\", \"K_mgkg\"],\n        [\"DHT22_T_C\", \"aire_cultivo_temp_C\"], [\"DHT22_HR_pct\", \"aire_cultivo_humedad_pct\"], [\"Caudal_Lmin\", \"caudal_Lmin\"]]\n};\n// Variables de las que se envía la serie por hora (24 valores)\nconst SERIES = [\"irradiancia_Wm2\", \"potencia_panel_W\", \"suelo_humedad_pct\", \"temp_ambiente_C\", \"pt100_1_C\", \"aire_cultivo_humedad_pct\"];\n\nconst ahora = Date.now();\nconst desde = ahora - HORAS * 3600e3;\nconst pad = (n) => String(n).padStart(2, \"0\");\nconst mesStr = (d) => d.getFullYear() + \"-\" + pad(d.getMonth() + 1);\nconst hoy = new Date(ahora);\nconst ant = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1);\nconst r2 = (v) => (v === null || v === undefined || Number.isNaN(v)) ? null : Math.round(v * 100) / 100;\nconst media = (x) => x.reduce((a, b) => a + b, 0) / x.length;\n\nfunction leerCsv(ruta) {\n    if (!fs.existsSync(ruta)) return [];\n    const lineas = fs.readFileSync(ruta, \"utf8\").split(/\\r?\\n/).filter(l => l.length);\n    if (lineas.length < 2) return [];\n    const cab = lineas[0].split(SEP);\n    const filas = [];\n    for (let i = 1; i < lineas.length; i++) {\n        const c = lineas[i].split(SEP);\n        if (c.length !== cab.length) continue;                       // línea dañada\n        const m = c[0].match(/^(\\d{4})-(\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2})$/);\n        if (!m) continue;                                            // encabezado repetido u otra basura\n        const f = { t: new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]).getTime() };\n        for (let j = 1; j < cab.length; j++) {\n            const v = c[j] === \"\" ? null : parseFloat(c[j].replace(DEC, \".\"));\n            f[cab[j]] = Number.isNaN(v) ? null : v;\n        }\n        filas.push(f);\n    }\n    return filas;\n}\n\n// ---- Modo de prueba: /api/resumen24h?demo=1 devuelve datos de EJEMPLO (no son mediciones reales)\nconst demo = !!(msg.req && msg.req.query && (msg.req.query.demo === \"1\" || msg.req.query.demo === \"true\"));\nfunction filasDemo(n) {\n    const paso = 5 * 60e3, inicio = Math.floor(ahora / paso) * paso - 287 * paso;\n    const filas = [];\n    let hum = 34, vol = 0;\n    for (let i = 0; i < 288; i++) {\n        const t = inicio + i * paso, d = new Date(t);\n        const h = d.getHours() + d.getMinutes() / 60;\n        const sol = Math.max(0, Math.sin((h - 6) / 12 * Math.PI));\n        const irr = Math.round(950 * sol * (0.85 + 0.15 * Math.sin(i)));\n        if (i === 100 || i === 200) { hum += 12; vol += 4.5; }\n        hum -= 0.07;\n        if (n === 1) filas.push({ t, PT100_1_C: 22 + 14 * sol, PT100_2_C: 22 + 13 * sol, PT100_3_C: 22 + 12 * sol,\n                                  T_ambiente_C: 21 + 6 * sol, HR_ambiente_pct: 80 - 25 * sol, Presion_hPa: 752.3 });\n        if (n === 2) filas.push({ t, Irradiancia_Wm2: irr, UVI: 9 * sol, V_panel_V: 17.5, I_panel_mA: irr * 0.4, P_panel_mW: 17.5 * irr * 0.4 });\n        if (n === 3) filas.push({ t, Suelo_T_C: 22.8, Suelo_Humedad_pct: hum, EC_uScm: 62, pH: 5.4, N_mgkg: 4, P_mgkg: 5, K_mgkg: 14,\n                                  DHT22_T_C: 21 + 5 * sol, DHT22_HR_pct: 70 - 20 * sol, Caudal_Lmin: 0, Volumen_L: vol });\n    }\n    return filas;\n}\nfunction filasNodo(n) {\n    if (demo) return filasDemo(n);\n    const base = DIR + \"promedios_5min/nodo\" + n + \"_\" + NOMBRES[n] + \"_\";\n    return leerCsv(base + mesStr(ant) + \".csv\").concat(leerCsv(base + mesStr(hoy) + \".csv\"))\n        .filter(f => f.t >= desde && f.t <= ahora + 60e3).sort((a, b) => a.t - b.t);\n}\nfunction valores(filas, col, factor) {\n    return filas.map(f => (typeof f[col] === \"number\") ? f[col] * (factor || 1) : null);\n}\nfunction estadisticas(filas, col, factor) {\n    const v = valores(filas, col, factor);\n    const val = v.filter(x => x !== null);\n    if (!val.length) return null;\n    const a = [], b = [];\n    filas.forEach((f, i) => {\n        if (v[i] === null) return;\n        if (f.t >= ahora - 3 * 3600e3) a.push(v[i]);\n        else if (f.t >= ahora - 6 * 3600e3) b.push(v[i]);\n    });\n    return { media: r2(media(val)), min: r2(Math.min(...val)), max: r2(Math.max(...val)), ultimo: r2(val[val.length - 1]),\n             cambio_3h: (a.length && b.length) ? r2(media(a) - media(b)) : null };\n}\nfunction serieHoraria(filas, col, factor) {\n    const out = [];\n    for (let h = HORAS; h >= 1; h--) {\n        const ini = ahora - h * 3600e3, fin = ahora - (h - 1) * 3600e3;\n        const x = filas.filter(f => f.t >= ini && f.t < fin && typeof f[col] === \"number\").map(f => f[col] * (factor || 1));\n        out.push(x.length ? r2(media(x)) : null);\n    }\n    return out;\n}\n\nconst nodos = {};\nfor (const n of [1, 2, 3]) {\n    const filas = filasNodo(n);\n    const o = { rol: ROL[n], cobertura_pct: Math.round(filas.length / (HORAS * 12) * 100), variables: {}, serie_horaria: {} };\n    for (const [col, nombre, factor] of VARIABLES[n]) {\n        const s = estadisticas(filas, col, factor);\n        if (s) o.variables[nombre] = s;\n        if (s && SERIES.includes(nombre)) o.serie_horaria[nombre] = serieHoraria(filas, col, factor);\n    }\n    const paso_h = 5 / 60;   // cada fila es el promedio de 5 min\n    if (n === 2) {\n        const irr = valores(filas, \"Irradiancia_Wm2\").filter(x => x !== null);\n        const pw = valores(filas, \"P_panel_mW\", 0.001).filter(x => x !== null);\n        o.energia_solar_recibida_kWh_m2 = r2(irr.reduce((a, b) => a + b, 0) * paso_h / 1000);\n        o.energia_entregada_por_panel_Wh = r2(pw.reduce((a, b) => a + b, 0) * paso_h);\n    }\n    if (n === 3) {\n        const vol = valores(filas, \"Volumen_L\").filter(x => x !== null);\n        let litros = 0;\n        for (let i = 1; i < vol.length; i++) if (vol[i] > vol[i - 1]) litros += vol[i] - vol[i - 1];   // ignora reinicios del nodo\n        o.agua_regada_L = r2(litros);\n    }\n    nodos[NOMBRES[n]] = o;\n}\n\n// Eventos de riego de las últimas 24 h\nlet riegos = 0, segundos = 0;\nif (demo) { riegos = 2; segundos = 120; }\nfor (const m of (demo ? [] : [ant, hoy])) {\n    const ruta = DIR + \"riego_\" + mesStr(m) + \".jsonl\";\n    if (!fs.existsSync(ruta)) continue;\n    fs.readFileSync(ruta, \"utf8\").split(/\\r?\\n/).forEach(l => {\n        if (!l) return;\n        try {\n            const e = JSON.parse(l);\n            if (e.evento === \"riego\" && e.ts >= desde) { riegos++; segundos += Number(e.seg) || 0; }\n        } catch (err) { /* línea dañada */ }\n    });\n}\nconst u3 = global.get(\"ultimo_3\");\nconst f = new Date(ahora);\nmsg.statusCode = 200;\nmsg.payload = {\n    aviso_datos: demo ? \"DATOS DE EJEMPLO generados para probar el sistema; no son mediciones reales.\" : undefined,\n    generado: f.getFullYear() + \"-\" + pad(f.getMonth() + 1) + \"-\" + pad(f.getDate()) + \" \" + pad(f.getHours()) + \":\" + pad(f.getMinutes()),\n    ventana_horas: HORAS,\n    nodos: nodos,\n    riego: { riegos_ordenados: riegos, segundos_de_riego: segundos,\n             valvula_ahora: (u3 && u3.valvula === 1) ? \"abierta\" : \"cerrada\" },\n    configuracion: { riego_automatico: global.get(\"riego_auto\") === true,\n                     umbral_humedad_suelo_pct: Number(global.get(\"riego_umbral\") ?? 25),\n                     duracion_riego_s: Number(global.get(\"riego_dur\") ?? 60) }\n};\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [
+      {
+        "var": "fs",
+        "module": "fs"
+      }
+    ],
+    "x": 400,
+    "y": 120,
+    "wires": [
+      [
+        "http_res_out"
+      ]
+    ]
+  },
+  {
+    "id": "http_res_out",
+    "type": "http response",
+    "z": "tab_ia",
+    "name": "",
+    "statusCode": "",
+    "headers": {},
+    "x": 650,
+    "y": 120,
+    "wires": []
+  },
+  {
+    "id": "http_diag",
+    "type": "http in",
+    "z": "tab_ia",
+    "name": "",
+    "url": "/api/diagnostico",
+    "method": "post",
+    "upload": false,
+    "skipBodyParsing": false,
+    "swaggerDoc": "",
+    "x": 150,
+    "y": 260,
+    "wires": [
+      [
+        "fn_diag"
+      ]
+    ]
+  },
+  {
+    "id": "fn_diag",
+    "type": "function",
+    "z": "tab_ia",
+    "name": "Guardar y publicar diagnostico",
+    "func": "// Recibe el diagnóstico que genera n8n con Ollama. Lo guarda, lo publica y responde a n8n.\nconst p = msg.payload;\nif (!p || typeof p !== \"object\" || !p.diagnostico) {\n    msg.statusCode = 400;\n    msg.payload = { ok: false, error: \"falta el campo diagnostico\" };\n    return [msg, null, null];\n}\nconst ts = p.ts || Date.now();\nconst d = new Date(ts);\nconst mes = d.getFullYear() + \"-\" + String(d.getMonth() + 1).padStart(2, \"0\");\nconst linea = { ts: ts, modelo: p.modelo || \"\", duracion_s: p.duracion_s || null, valido: p.valido === true, diagnostico: p.diagnostico };\nglobal.set(\"ia_diag\", linea);\n\nmsg.statusCode = 200;\nmsg.payload = { ok: true };\nreturn [\n    msg,                                                                                   // respuesta HTTP a n8n\n    { filename: \"C:/agrivoltaico/datos/diagnosticos_\" + mes + \".jsonl\", payload: JSON.stringify(linea) },   // historial\n    { topic: \"agri/ia/diagnostico\", payload: JSON.stringify(linea), retain: true }         // dashboard (queda retenido)\n];",
+    "outputs": 3,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 400,
+    "y": 260,
+    "wires": [
+      [
+        "http_diag_out"
+      ],
+      [
+        "file_diag"
+      ],
+      [
+        "mqtt_ia"
+      ]
+    ]
+  },
+  {
+    "id": "http_diag_out",
+    "type": "http response",
+    "z": "tab_ia",
+    "name": "",
+    "statusCode": "",
+    "headers": {},
+    "x": 650,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "file_diag",
+    "type": "file",
+    "z": "tab_ia",
+    "name": "Historial de diagnosticos",
+    "filename": "filename",
+    "filenameType": "msg",
+    "appendNewline": true,
+    "createDir": true,
+    "overwriteFile": "false",
+    "encoding": "none",
+    "x": 670,
+    "y": 270,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "mqtt_ia",
+    "type": "mqtt out",
+    "z": "tab_ia",
+    "name": "agri/ia/diagnostico (retenido)",
+    "topic": "",
+    "qos": "0",
+    "retain": "",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "broker1",
+    "x": 690,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "catch_ia",
+    "type": "catch",
+    "z": "tab_ia",
+    "name": "",
+    "scope": [
+      "fn_resumen",
+      "fn_diag",
+      "file_diag"
+    ],
+    "uncaught": false,
+    "x": 150,
+    "y": 400,
+    "wires": [
+      [
+        "dbg_ia_err"
+      ]
+    ]
+  },
+  {
+    "id": "dbg_ia_err",
+    "type": "debug",
+    "z": "tab_ia",
+    "name": "Error en endpoints de IA",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 400,
+    "y": 400,
+    "wires": []
+  },
+  {
+    "id": "55139b438b85fd7b",
+    "type": "global-config",
+    "env": [],
+    "modules": {
+      "@flowfuse/node-red-dashboard": "1.34.1"
+    }
+  }
+]

@@ -1,0 +1,246 @@
+{
+  "name": "Asesor IA agrivoltaico (Ollama)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "2fb1cc1a-8286-43a4-8d12-8f985b36b6fa",
+      "name": "Ejecutar a mano (DATOS DE EJEMPLO)",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        2880,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "id": "2c9ba521-0e89-44f8-a4ea-2a16a5403183",
+      "name": "Cada 3 horas",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        2880,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "path": "diagnostico-agri",
+        "options": {}
+      },
+      "id": "81d1e714-3e7d-4297-8e08-1170049cc777",
+      "name": "Desde el dashboard",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        976
+      ],
+      "webhookId": "a992285e-55ab-4e90-8551-1443e82edb3a"
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:1880/api/resumen24h",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "8c40239c-b7d6-4817-8efd-38e004cac7de",
+      "name": "Pedir resumen 24 h a Node-RED",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3168,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Arma el prompt para Ollama a partir del resumen de 24 h que entrega Node-RED\nconst datos = $input.first().json;\n\nconst instrucciones = [\n  \"Eres un asesor tecnico para un sistema agrivoltaico pequeno: un panel fotovoltaico de 10 W sobre un cultivo con riego por electrovalvula.\",\n  \"Analizas datos reales de sensores y respondes en espanol, de forma breve y concreta.\",\n  \"\",\n  \"REGLAS ESTRICTAS\",\n  \"- Usa SOLO los datos del JSON. No inventes cifras ni sensores.\",\n  \"- Cita el valor concreto cuando afirmes algo (por ejemplo: humedad del suelo 19 %).\",\n  \"- Si cobertura_pct de un nodo es menor a 80, advierte que faltan datos de ese nodo.\",\n  \"- Un valor null o una variable ausente significa que el sensor no midio.\",\n  \"- Si el JSON trae aviso_datos, empieza el resumen aclarando que son datos de ejemplo.\",\n  \"- No ordenes abrir la valvula: solo recomienda. La decision de riego la toma otra regla automatica.\",\n  \"- Maximo 3 alertas y 3 recomendaciones, de una frase cada una. Si todo esta normal, deja alertas vacio.\",\n  \"\",\n  \"GLOSARIO\",\n  \"- irradiancia_Wm2: radiacion solar (mediodia despejado: 800 a 1100). indice_uv: indice UV.\",\n  \"- potencia_panel_W: potencia medida del panel; puede ser casi 0 si no hay carga conectada.\",\n  \"- pt100_1_C, pt100_2_C, pt100_3_C: temperaturas medidas con sondas PT100 del sistema del panel.\",\n  \"- temp_ambiente_C y humedad_aire_pct: aire junto al panel. aire_cultivo_*: aire en el cultivo.\",\n  \"- suelo_humedad_pct: humedad del suelo. configuracion.umbral_humedad_suelo_pct es el nivel bajo el cual la regla automatica riega.\",\n  \"- suelo_EC_uScm: conductividad (salinidad). suelo_pH, N_mgkg, P_mgkg, K_mgkg: pH y nutrientes.\",\n  \"- serie_horaria: 24 valores; el primero es de hace 24 horas y el ultimo de la ultima hora; null = sin datos.\",\n  \"- cambio_3h: media de las ultimas 3 h menos la media de las 3 h anteriores.\",\n  \"\",\n  \"DATOS (JSON):\",\n  JSON.stringify(datos),\n  \"\",\n  \"Responde SOLO con este JSON:\",\n  '{\"resumen\": \"2 o 3 frases sobre el estado general\", \"alertas\": [\"...\"], \"recomendaciones\": [\"...\"], \"prediccion_energia\": \"1 o 2 frases sobre la generacion solar esperada en las proximas horas segun la tendencia de irradiancia\"}'\n].join(\"\\n\");\n\nreturn [{\n  json: {\n    ollama: {\n      model: \"qwen2.5:3b\",\n      prompt: instrucciones,\n      stream: false,\n      format: \"json\",\n      options: { temperature: 0.2, num_ctx: 4096, num_predict: 600 }\n    }\n  }\n}];"
+      },
+      "id": "4cccc30d-619e-4620-9737-6d2463e39722",
+      "name": "Armar prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3472,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.ollama) }}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "d08b2c8b-dbc4-4e8c-8b5f-1ccffd9bf354",
+      "name": "Consultar a Ollama (qwen2.5:3b)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3776,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Interpreta la respuesta de Ollama y la deja lista para Node-RED\nconst o = $input.first().json;\nconst texto = o.response || \"\";\nlet d = null;\ntry { d = JSON.parse(texto); }\ncatch (e) {\n  const m = texto.match(/\\{[\\s\\S]*\\}/);\n  if (m) { try { d = JSON.parse(m[0]); } catch (e2) { d = null; } }\n}\nconst lista = (v) => Array.isArray(v) ? v.map(String).slice(0, 5) : (v ? [String(v)] : []);\nconst diagnostico = d\n  ? { resumen: String(d.resumen || \"\"), alertas: lista(d.alertas), recomendaciones: lista(d.recomendaciones), prediccion_energia: String(d.prediccion_energia || \"\") }\n  : { resumen: \"No se pudo interpretar la respuesta del modelo.\", alertas: [], recomendaciones: [], prediccion_energia: \"\", crudo: texto.slice(0, 400) };\nreturn [{ json: {\n  ts: Date.now(),\n  modelo: o.model || \"qwen2.5:3b\",\n  duracion_s: o.total_duration ? Math.round(o.total_duration / 1e9) : null,\n  valido: !!d,\n  diagnostico: diagnostico\n} }];"
+      },
+      "id": "6a9815e9-3600-422e-ad9b-3e89530bbc6f",
+      "name": "Interpretar respuesta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4080,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:1880/api/diagnostico",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "a93ef423-1fe2-4228-9f3e-b1c929ae4a81",
+      "name": "Enviar diagnostico a Node-RED",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4368,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:1880/api/resumen24h?demo=1",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "f156b2fc-8d53-474b-b830-ed6ef3b753dc",
+      "name": "Pedir resumen DE EJEMPLO",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3168,
+        576
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Cada 3 horas": {
+      "main": [
+        [
+          {
+            "node": "Pedir resumen 24 h a Node-RED",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Desde el dashboard": {
+      "main": [
+        [
+          {
+            "node": "Pedir resumen 24 h a Node-RED",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedir resumen 24 h a Node-RED": {
+      "main": [
+        [
+          {
+            "node": "Armar prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar prompt": {
+      "main": [
+        [
+          {
+            "node": "Consultar a Ollama (qwen2.5:3b)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar a Ollama (qwen2.5:3b)": {
+      "main": [
+        [
+          {
+            "node": "Interpretar respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Interpretar respuesta": {
+      "main": [
+        [
+          {
+            "node": "Enviar diagnostico a Node-RED",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ejecutar a mano (DATOS DE EJEMPLO)": {
+      "main": [
+        [
+          {
+            "node": "Pedir resumen DE EJEMPLO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedir resumen DE EJEMPLO": {
+      "main": [
+        [
+          {
+            "node": "Armar prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  }
+}

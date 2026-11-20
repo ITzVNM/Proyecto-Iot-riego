@@ -1,0 +1,16 @@
+# PlatformIO y editores
+firmware/.pio/
+firmware/.vscode/
+.vscode/
+# Credenciales: nunca subir
+firmware/include/secrets.h
+# LaTeX
+informe/*.aux
+informe/*.log
+informe/*.out
+informe/*.bbl
+informe/*.blg
+informe/*.pdf
+# Sistema
+.DS_Store
+Thumbs.db
